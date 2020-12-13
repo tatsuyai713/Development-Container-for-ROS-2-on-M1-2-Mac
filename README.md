@@ -1,1 +1,6 @@
-# ROS_on_M1_Mac_Docker
+# ROS on M1 Mac Docker
+## How to use
+1. Install docker developer preview for M1 Mac
+2. excute ./launch_container.sh setup
+3. Usually use ./launch_container.sh
+4. If you want to commit docker container please use ./launch_container.sh commit
