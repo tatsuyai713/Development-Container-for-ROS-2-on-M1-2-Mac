@@ -1,4 +1,5 @@
-# ROS on M1 Mac Docker
+# ROS on M1 Mac Docker (ARM64)
+ This docker file makes the container of ROS Melodic on Ubuntu 18.04 LTS for M1 Mac (ARM64)
 ## How to use
 1. Install docker developer preview for M1 Mac
 2. excute ./launch_container.sh setup
