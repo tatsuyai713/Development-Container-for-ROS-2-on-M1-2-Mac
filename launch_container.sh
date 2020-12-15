@@ -55,44 +55,68 @@ DOCKER_OPT="${DOCKER_OPT} \
         -w ${DOCKER_WORK_DIR} \
         -u ${USER} \
         --hostname Docker-`hostname` \
-        --add-host Docker-`hostname`:127.0.1.1"
+        --add-host Docker-`hostname`:127.0.1.1 \
+		-p 3389:3389 \
+		-e PASSWD=${USER}"
 		
 		
 ## Allow X11 Connection
 xhost +local:`hostname`-Docker
 CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
 if [ ! "$CONTAINER_ID" ]; then
-    docker run -u root \
-		--volume=/dev:/dev:rw \
-		--name=${DOCKER_NAME} \
-		bionic_ws:latest \
-		chmod 666 /dev/null
-	docker commit bionic_docker bionic_ws:latest
-	CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
-	docker rm $CONTAINER_ID
-
-    docker run -u root \
-		--volume=/dev:/dev:rw \
-		--name=${DOCKER_NAME} \
-		bionic_ws:latest \
-		chmod 666 /dev/urandom
-	docker commit bionic_docker bionic_ws:latest
-	CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
-	docker rm $CONTAINER_ID
-
-	docker run ${DOCKER_OPT} \
-        -it \
-		--volume=/dev:/dev:rw \
-		--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
-		--shm-size=1gb \
-		--env=TERM=xterm-256color \
-		--net=host \
-		--name=${DOCKER_NAME} \
-		bionic_ws:latest \
-		bash
+	if [ ! $# -ne 1 ]; then
+		if [ "xrdp" = $1 ]; then
+		    echo "Remote Desktop Mode"
+			docker run ${DOCKER_OPT} \
+				-it --rm \
+				--shm-size=1gb \
+				--name=${DOCKER_NAME} \
+				bionic_ws:latest \
+				bash -c docker-entrypoint.sh
+		else
+			docker run ${DOCKER_OPT} \
+				-it \
+				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
+				--shm-size=1gb \
+				--env=TERM=xterm-256color \
+				--net=host \
+				--name=${DOCKER_NAME} \
+				bionic_ws:latest \
+				bash
+		fi
+	else
+		docker run ${DOCKER_OPT} \
+			-it \
+			--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
+			--shm-size=1gb \
+			--env=TERM=xterm-256color \
+			--net=host \
+			--name=${DOCKER_NAME} \
+			bionic_ws:latest \
+			bash
+	fi
 else
-	docker start $CONTAINER_ID
-	docker attach $CONTAINER_ID
+	if [ ! $# -ne 1 ]; then
+		if [ "xrdp" = $1 ]; then
+			docker commit bionic_docker bionic_ws:latest
+			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+			docker rm $CONTAINER_ID
+
+		    echo "Remote Desktop Mode"
+			docker run ${DOCKER_OPT} \
+				-it --rm \
+				--shm-size=1gb \
+				--name=${DOCKER_NAME} \
+				bionic_ws:latest \
+				bash -c docker-entrypoint.sh
+		else
+			docker start $CONTAINER_ID
+			docker attach $CONTAINER_ID
+		fi
+	else
+		docker start $CONTAINER_ID
+		docker attach $CONTAINER_ID
+	fi
 fi
 
 xhost -local:Docker-`hostname`
