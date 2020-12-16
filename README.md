@@ -8,4 +8,4 @@
 2. excute "./launch_container.sh setup"
 3. Usually use "./launch_container.sh"
 4. If you want to commit docker container, please use "./launch_container.sh commit"
-5. If you want to use ROS with GUI, please use "./launch_container.sh xrdp" and use Microsoft Remote Desktop(access to 127.0.0.1).
+5. If you want to use ROS with GUI, please use "./launch_container.sh xrdp" and use Parallels Client(access to 127.0.0.1).(Don't use Microsoft Remote Desktop)
