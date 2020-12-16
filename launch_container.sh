@@ -68,7 +68,7 @@ if [ ! "$CONTAINER_ID" ]; then
 		if [ "xrdp" = $1 ]; then
 		    echo "Remote Desktop Mode"
 			docker run ${DOCKER_OPT} \
-				-it --rm \
+				-it \
 				--shm-size=1gb \
 				--name=${DOCKER_NAME} \
 				bionic_ws:latest \
@@ -104,7 +104,7 @@ else
 
 		    echo "Remote Desktop Mode"
 			docker run ${DOCKER_OPT} \
-				-it --rm \
+				-it \
 				--shm-size=1gb \
 				--name=${DOCKER_NAME} \
 				bionic_ws:latest \
