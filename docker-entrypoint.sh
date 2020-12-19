@@ -14,6 +14,7 @@ if (( $# == 0 )); then
     # Set login password
     echo "PASSWD: $PASSWD"
     echo ${USER}:${PASSWD} | sudo chpasswd
+    rm -rf ${HOME}/.config/lxsession # keyboard setting
 
     [[ ! -e ${HOME}/.xsession ]] && \
         cp /etc/skel/.xsession ${HOME}/.xsession

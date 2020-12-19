@@ -75,6 +75,7 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       xrdp-pulseaudio-installer \
+      net-tools \
     && apt-get clean \
     && rm -rf /var/cache/apt/archives/* \
     && rm -rf /var/lib/apt/lists/* \
@@ -89,26 +90,23 @@ RUN apt-get update \
 RUN rosdep init
 
 USER $USERNAME
+RUN rosdep update
+USER root
+
 RUN if [ "${LOCALE}" = "JP" ]; then \
-    mkdir -p ~/.config/autostart/ \
-    && { \
+    # mkdir -p ~/.config/autostart/ \
+    # &&  \
+    { \
     echo '[Desktop Entry]'; \
     echo 'Type=Application'; \
     echo 'Name=SetJPKeyboard'; \
     echo 'Exec=setxkbmap -layout jp'; \
-#echo 'OnlyShowIn=LXDE'; \
-    } > ~/.config/autostart/setxkbmap.desktop \
-    && echo "JP Keyboard"; \
-else \
-    echo "US Keyboard"; \
+    echo 'OnlyShowIn=LXDE'; \
+    # } > ~/.config/autostart/setxkbmap.desktop; \
+    } > /etc/xdg/autostart/setxkbmap.desktop; \
 fi
 
-
-RUN rosdep update
-USER root
-
 # Set locale
-
 RUN if [ "${LOCALE}" = "JP" ]; then \
         cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
         && echo 'Asia/Tokyo' > /etc/timezone \
@@ -118,12 +116,12 @@ RUN if [ "${LOCALE}" = "JP" ]; then \
         && LANG=ja_JP.UTF-8 \
         && LANGUAGE=ja_JP:ja \
         && LC_ALL=ja_JP.UTF-8; \
-    else \
-        echo "Locale is US"; \
 fi
 
 # RUN mkdir -p /etc/X11/xorg.conf.d/
-# RUN { \
+
+# RUN if [ "${LOCALE}" = "JP" ]; then \
+# { \
 #       echo 'Section "InputClass"'; \
 #       echo '        Identifier "system-keyboard"'; \
 #       echo '        MatchIsKeyboard "on"'; \
@@ -131,16 +129,20 @@ fi
 #       echo '        Option "XkbModel" "jp106"'; \
 #       echo '        Option "XkbOptions" "grp:alt_shift_toggle"'; \
 #       echo 'EndSection'; \
-#     } > /etc/X11/xorg.conf.d/00-keyboard.conf
+#     } > /etc/X11/xorg.conf.d/00-keyboard.conf; \
+# fi
 
-# RUN echo '# KEYBOARD CONFIGURATION FILE' > /etc/default/keyboard
-# RUN echo '# Consult the keyboard(5) manual page.' >> /etc/default/keyboard
-# RUN echo 'XKBMODEL="pc109"' >> /etc/default/keyboard
-# RUN echo 'XKBLAYOUT="jp"' >> /etc/default/keyboard
-# RUN echo 'XKBVARIANT=""' >> /etc/default/keyboard
-# RUN echo 'XKBOPTIONS=""' >> /etc/default/keyboard
-# RUN echo 'BACKSPACE="guess"' >> /etc/default/keyboard
-
+# RUN if [ "${LOCALE}" = "JP" ]; then \
+# { \
+#       echo '# KEYBOARD CONFIGURATION FILE'; \
+#       echo '# Consult the keyboard(5) manual page.'; \
+#       echo 'XKBMODEL="pc109"'; \
+#       echo 'XKBLAYOUT="jp"'; \
+#       echo 'XKBVARIANT=""'; \
+#       echo 'XKBOPTIONS=""'; \
+#       echo 'BACKSPACE="guess"'; \
+#     } > /etc/default/keyboard; \
+# fi
 
 # Expose RDP port
 EXPOSE 3389

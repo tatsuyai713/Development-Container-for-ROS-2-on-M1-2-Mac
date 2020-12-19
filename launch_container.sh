@@ -86,6 +86,7 @@ if [ ! "$CONTAINER_ID" ]; then
 				-it \
 				--shm-size=1gb \
 				--name=${DOCKER_NAME} \
+				--net=host \
 				bionic_ws:latest \
 				bash -c docker-entrypoint.sh
 				
@@ -126,6 +127,7 @@ else
 				-it \
 				--shm-size=1gb \
 				--name=${DOCKER_NAME} \
+				--net=host \
 				bionic_ws:latest \
 				bash -c docker-entrypoint.sh
 
