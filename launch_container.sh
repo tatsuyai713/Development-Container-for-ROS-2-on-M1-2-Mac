@@ -9,7 +9,22 @@ if [ ! "$(docker image ls -q ${NAME_IMAGE})" ]; then
 		if [ "setup" = $1 ]; then
 			echo "Image ${NAME_IMAGE} does not exist."
 			echo 'Now building image without proxy...'
-			docker build --file=./noproxy.dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER
+			docker build --file=./noproxy.dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg SETLOCALE='US'
+		else
+			echo "Docker image is not found. Please setup first!"
+			exit 0
+		fi
+    elif [ ! $# -ne 2 ]; then
+		if [ "setup" = $1 ]; then
+			if [ "US" = $2 ]; then
+				echo "Image ${NAME_IMAGE} does not exist."
+				echo 'Now building image without proxy...'
+				docker build --file=./noproxy.dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg LOCALE='US'
+			else
+				echo "Image ${NAME_IMAGE} does not exist."
+				echo 'Now building image without proxy...'
+				docker build --file=./noproxy.dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg LOCALE='JP'
+			fi
 		else
 			echo "Docker image is not found. Please setup first!"
 			exit 0
@@ -73,6 +88,10 @@ if [ ! "$CONTAINER_ID" ]; then
 				--name=${DOCKER_NAME} \
 				bionic_ws:latest \
 				bash -c docker-entrypoint.sh
+				
+			docker commit bionic_docker bionic_ws:latest
+			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+			docker rm $CONTAINER_ID
 		else
 			docker run ${DOCKER_OPT} \
 				-it \
@@ -109,6 +128,10 @@ else
 				--name=${DOCKER_NAME} \
 				bionic_ws:latest \
 				bash -c docker-entrypoint.sh
+
+			docker commit bionic_docker bionic_ws:latest
+			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+			docker rm $CONTAINER_ID
 		else
 			docker start $CONTAINER_ID
 			docker attach $CONTAINER_ID
