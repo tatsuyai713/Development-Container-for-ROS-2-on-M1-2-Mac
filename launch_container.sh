@@ -76,7 +76,7 @@ DOCKER_OPT="${DOCKER_OPT} \
 		
 		
 ## Allow X11 Connection
-xhost +local:`hostname`-Docker
+xhost +local:Docker-`hostname`
 CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
 if [ ! "$CONTAINER_ID" ]; then
 	if [ ! $# -ne 1 ]; then
