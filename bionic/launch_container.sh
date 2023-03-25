@@ -6,24 +6,27 @@ NAME_IMAGE='bionic_ws'
 
 if [ ! "$(docker image ls -q ${NAME_IMAGE})" ]; then
 	if [ ! $# -ne 1 ]; then
-		if [ "setup" = $1 ]; then
+		if [ "build" = $1 ]; then
 			echo "Image ${NAME_IMAGE} does not exist."
 			echo 'Now building image without proxy...'
 			docker build --file=./noproxy.dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg SETLOCALE='US'
+			exit 0
 		else
 			echo "Docker image is not found. Please setup first!"
 			exit 0
 		fi
     elif [ ! $# -ne 2 ]; then
-		if [ "setup" = $1 ]; then
+		if [ "build" = $1 ]; then
 			if [ "US" = $2 ]; then
 				echo "Image ${NAME_IMAGE} does not exist."
 				echo 'Now building image without proxy...'
 				docker build --file=./noproxy.dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg LOCALE='US'
+				exit 0
 			else
 				echo "Image ${NAME_IMAGE} does not exist."
 				echo 'Now building image without proxy...'
 				docker build --file=./noproxy.dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg LOCALE='JP'
+				exit 0
 			fi
 		else
 			echo "Docker image is not found. Please setup first!"
@@ -33,16 +36,23 @@ if [ ! "$(docker image ls -q ${NAME_IMAGE})" ]; then
 		echo "Docker image is not found. Please setup first!"
 		exit 0
   	fi
-else
-	if [ ! $# -ne 1 ]; then
-		if [ "commit" = $1 ]; then
-			docker commit bionic_docker bionic_ws:latest
-			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
-			docker rm $CONTAINER_ID
-			exit 0
-		else
-		    echo "Docker image is found. Setup is already finished!"
-		fi
+fi
+
+if [ ! $# -ne 1 ]; then
+	if [ "commit" = $1 ]; then
+		docker commit bionic_docker bionic_ws:latest
+		CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+		docker rm $CONTAINER_ID -f
+		exit 0
+	fi
+fi
+
+if [ ! $# -ne 1 ]; then
+	if [ "stop" = $1 ]; then
+		CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+		docker stop $CONTAINER_ID
+		docker rm $CONTAINER_ID -f
+		exit 0
 	fi
 fi
 
@@ -67,6 +77,9 @@ DOCKER_OPT="${DOCKER_OPT} \
         --env=XAUTHORITY=${XAUTH} \
         --volume=${XAUTH}:${XAUTH} \
         --env=DISPLAY=${DISPLAY} \
+		-it \
+		--shm-size=4gb \
+		--env=TERM=xterm-256color \
         -w ${DOCKER_WORK_DIR} \
         -u ${USER} \
         --hostname Docker-`hostname` \
@@ -81,66 +94,61 @@ CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
 if [ ! "$CONTAINER_ID" ]; then
 	if [ ! $# -ne 1 ]; then
 		if [ "xrdp" = $1 ]; then
-		    echo "Remote Desktop Mode"
-			docker run ${DOCKER_OPT} \
-				-it \
-				--shm-size=1gb \
-				--name=${DOCKER_NAME} \
-				--net=host \
-				bionic_ws:latest \
-				bash -c docker-entrypoint.sh
-				
 			docker commit bionic_docker bionic_ws:latest
 			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
-			docker rm $CONTAINER_ID
-		else
+			docker stop $CONTAINER_ID
+			docker rm $CONTAINER_ID -f
+
+		    echo "Remote Desktop Mode"
 			docker run ${DOCKER_OPT} \
-				-it \
-				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
-				--shm-size=1gb \
-				--env=TERM=xterm-256color \
-				--net=host \
 				--name=${DOCKER_NAME} \
 				bionic_ws:latest \
-				bash
+				/bin/bash -c docker-entrypoint.sh
+
+			docker commit bionic_docker bionic_ws:latest
+			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+			docker stop $CONTAINER_ID
+			docker rm $CONTAINER_ID -f
+		else
+			docker run ${DOCKER_OPT} \
+				--name=${DOCKER_NAME} \
+				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
+				bionic_ws:latest \
+				/bin/bash
 		fi
 	else
 		docker run ${DOCKER_OPT} \
-			-it \
-			--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
-			--shm-size=1gb \
-			--env=TERM=xterm-256color \
-			--net=host \
 			--name=${DOCKER_NAME} \
+			--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
 			bionic_ws:latest \
-			bash
+			/bin/bash
 	fi
 else
 	if [ ! $# -ne 1 ]; then
 		if [ "xrdp" = $1 ]; then
 			docker commit bionic_docker bionic_ws:latest
 			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
-			docker rm $CONTAINER_ID
+			docker stop $CONTAINER_ID
+			docker rm $CONTAINER_ID -f
 
 		    echo "Remote Desktop Mode"
 			docker run ${DOCKER_OPT} \
-				-it \
-				--shm-size=1gb \
 				--name=${DOCKER_NAME} \
-				--net=host \
+				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
 				bionic_ws:latest \
-				bash -c docker-entrypoint.sh
+				/bin/bash -c docker-entrypoint.sh
 
 			docker commit bionic_docker bionic_ws:latest
 			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
-			docker rm $CONTAINER_ID
+			docker stop $CONTAINER_ID
+			docker rm $CONTAINER_ID -f
 		else
 			docker start $CONTAINER_ID
-			docker attach $CONTAINER_ID
+			docker exec -it $CONTAINER_ID /bin/bash
 		fi
 	else
 		docker start $CONTAINER_ID
-		docker attach $CONTAINER_ID
+		docker exec -it $CONTAINER_ID /bin/bash
 	fi
 fi
 

@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 ARG UID=9001
 ARG GID=9001
 ARG UNAME=ubuntu
@@ -27,16 +27,6 @@ RUN echo 'path-include=/usr/share/locale/ja/LC_MESSAGES/*.mo' > /etc/dpkg/dpkg.c
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
         sudo \
-        lxde \
-        xrdp \
-        ibus \
-        ibus-mozc \
-        language-pack-ja-base \
-        language-pack-ja \
-        fonts-noto-cjk \
-        fonts-noto-color-emoji \
-        supervisor \
-        gosu \
         build-essential \
         curl \
         less \
@@ -47,9 +37,6 @@ RUN echo 'path-include=/usr/share/locale/ja/LC_MESSAGES/*.mo' > /etc/dpkg/dpkg.c
         bash-completion \
         command-not-found \
         libglib2.0-0 \
-        gstreamer1.0-plugins-* \
-        libgstreamer1.0-* \
-        libgstreamer-plugins-*1.0-* \
         vim \
         emacs \
         ssh \
@@ -61,29 +48,37 @@ RUN echo 'path-include=/usr/share/locale/ja/LC_MESSAGES/*.mo' > /etc/dpkg/dpkg.c
         lsb-release \
         gnupg
 
+RUN echo 'path-include=/usr/share/locale/ja/LC_MESSAGES/*.mo' > /etc/dpkg/dpkg.cfg.d/includes \
+    && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        lxde \
+        xrdp \
+        ibus \
+        ibus-mozc \
+        language-pack-ja-base \
+        language-pack-ja \
+        fonts-noto-cjk \
+        fonts-noto-color-emoji \
+        supervisor \
+        gosu
+
 RUN sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 RUN apt-get update && apt-get install -y \
-        ros-melodic-desktop-full \
-        python-rosdep \
-        python-rosinstall \
-        python-rosinstall-generator \
-        python-wstool \
+        ros-noetic-desktop-full \
+        python3-rosdep \
+        python3-rosinstall \
+        python3-rosinstall-generator \
+        python3-wstool \
         htop
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-      xrdp-pulseaudio-installer \
       net-tools \
     && apt-get clean \
     && rm -rf /var/cache/apt/archives/* \
-    && rm -rf /var/lib/apt/lists/* \
-# Apply a patch
-    && sed -i -E \
-      's@^dget ".*pulseaudio.*\.dsc"$@\dget -u "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pulseaudio/$pulseaudio_version/pulseaudio_$(echo $pulseaudio_version | sed "s/^.*://").dsc"@' \
-      /usr/sbin/xrdp-build-pulse-modules \
-    && /usr/sbin/xrdp-build-pulse-modules
+    && rm -rf /var/lib/apt/lists/* 
 
 
 
@@ -101,7 +96,6 @@ RUN if [ "${LOCALE}" = "JP" ]; then \
     echo 'Type=Application'; \
     echo 'Name=SetJPKeyboard'; \
     echo 'Exec=setxkbmap -layout jp'; \
-    echo 'OnlyShowIn=LXDE'; \
     # } > ~/.config/autostart/setxkbmap.desktop; \
     } > /etc/xdg/autostart/setxkbmap.desktop; \
 fi
