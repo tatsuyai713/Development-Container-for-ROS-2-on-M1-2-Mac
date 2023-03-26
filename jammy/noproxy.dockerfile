@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 ARG UID=9001
 ARG GID=9001
 ARG UNAME=ubuntu
@@ -60,18 +60,17 @@ RUN echo 'path-include=/usr/share/locale/ja/LC_MESSAGES/*.mo' > /etc/dpkg/dpkg.c
         fonts-noto-cjk \
         fonts-noto-color-emoji \
         supervisor \
-        gosu
-
-RUN sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-
-RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-RUN apt update && apt install -y \
-        ros-noetic-desktop-full \
-        python3-rosdep \
-        python3-rosinstall \
-        python3-rosinstall-generator \
-        python3-wstool \
         htop
+
+# RUN sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+
+# RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+# RUN apt update && apt install -y \
+#         ros-noetic-desktop-full \
+#         python3-rosdep \
+#         python3-rosinstall \
+#         python3-rosinstall-generator \
+#         python3-wstool
 
 RUN apt update \
     && DEBIAN_FRONTEND=noninteractive apt install -y \
@@ -82,10 +81,10 @@ RUN apt update \
 
 
 
-RUN rosdep init
+# RUN rosdep init
 
-USER $USERNAME
-RUN rosdep update
+# USER $USERNAME
+# RUN rosdep update
 USER root
 
 RUN if [ "${LOCALE}" = "JP" ]; then \
@@ -146,35 +145,6 @@ RUN apt update \
     && apt clean \
     && rm -rf /var/cache/apt/archives/* \
     && rm -rf /var/lib/apt/lists/* 
-
-# install ROS2 Humble
-RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
-RUN apt update && apt install -y --no-install-recommends \
-        ros-humble-desktop \
-        ros-dev-tools \
-        && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# install colcon and rosdep
-RUN apt update && apt install -y --no-install-recommends \
-        python3-colcon-common-extensions \
-        python3-rosdep \
-        && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
-
-USER $USERNAME
-
-# initialize rosdep
-RUN sudo rosdep init && \
-    rosdep update
-
-RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
-    echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc
-
-USER root
 
 # Expose RDP port
 EXPOSE 3389

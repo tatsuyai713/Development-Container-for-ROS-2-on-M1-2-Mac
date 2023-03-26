@@ -2,7 +2,7 @@
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 
-NAME_IMAGE='bionic_ws'
+NAME_IMAGE='jammy_ws'
 
 if [ ! "$(docker image ls -q ${NAME_IMAGE})" ]; then
 	if [ ! $# -ne 1 ]; then
@@ -40,8 +40,8 @@ fi
 
 if [ ! $# -ne 1 ]; then
 	if [ "commit" = $1 ]; then
-		docker commit bionic_docker bionic_ws:latest
-		CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+		docker commit jammy_docker jammy_ws:latest
+		CONTAINER_ID=$(docker ps -a -f name=jammy_docker --format "{{.ID}}")
 		docker rm $CONTAINER_ID -f
 		exit 0
 	fi
@@ -49,7 +49,7 @@ fi
 
 if [ ! $# -ne 1 ]; then
 	if [ "stop" = $1 ]; then
-		CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+		CONTAINER_ID=$(docker ps -a -f name=jammy_docker --format "{{.ID}}")
 		docker stop $CONTAINER_ID
 		docker rm $CONTAINER_ID -f
 		exit 0
@@ -65,7 +65,7 @@ fi
 chmod a+r $XAUTH
 
 DOCKER_OPT=""
-DOCKER_NAME="bionic_docker"
+DOCKER_NAME="jammy_docker"
 DOCKER_WORK_DIR="/home/${USER}"
 MAC_WORK_DIR="/Users/${USER}"
 DISPLAY=$(hostname):0
@@ -90,39 +90,39 @@ DOCKER_OPT="${DOCKER_OPT} \
 		
 ## Allow X11 Connection
 xhost +local:Docker-`hostname`
-CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+CONTAINER_ID=$(docker ps -a -f name=jammy_docker --format "{{.ID}}")
 if [ ! "$CONTAINER_ID" ]; then
 	if [ ! $# -ne 1 ]; then
 		if [ "xrdp" = $1 ]; then
 		    echo "Remote Desktop Mode"
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
-				bionic_ws:latest \
+				jammy_ws:latest \
 				--entrypoint docker-entrypoint.sh
 
-			docker commit bionic_docker bionic_ws:latest
-			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+			docker commit jammy_docker jammy_ws:latest
+			CONTAINER_ID=$(docker ps -a -f name=jammy_docker --format "{{.ID}}")
 			docker stop $CONTAINER_ID
 			docker rm $CONTAINER_ID -f
 		else
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
 				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
-				bionic_ws:latest \
+				jammy_ws:latest \
 				--entrypoint /bin/bash
 		fi
 	else
 		docker run ${DOCKER_OPT} \
 			--name=${DOCKER_NAME} \
 			--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
-			bionic_ws:latest \
+			jammy_ws:latest \
 			--entrypoint /bin/bash
 	fi
 else
 	if [ ! $# -ne 1 ]; then
 		if [ "xrdp" = $1 ]; then
-			docker commit bionic_docker bionic_ws:latest
-			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+			docker commit jammy_docker jammy_ws:latest
+			CONTAINER_ID=$(docker ps -a -f name=jammy_docker --format "{{.ID}}")
 			docker stop $CONTAINER_ID
 			docker rm $CONTAINER_ID -f
 
@@ -130,11 +130,11 @@ else
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
 				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
-				bionic_ws:latest \
+				jammy_ws:latest \
 				--entrypoint docker-entrypoint.sh
 
-			docker commit bionic_docker bionic_ws:latest
-			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+			docker commit jammy_docker jammy_ws:latest
+			CONTAINER_ID=$(docker ps -a -f name=jammy_docker --format "{{.ID}}")
 			docker stop $CONTAINER_ID
 			docker rm $CONTAINER_ID -f
 		else

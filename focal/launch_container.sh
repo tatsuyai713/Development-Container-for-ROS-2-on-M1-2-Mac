@@ -94,15 +94,11 @@ CONTAINER_ID=$(docker ps -a -f name=focal_docker --format "{{.ID}}")
 if [ ! "$CONTAINER_ID" ]; then
 	if [ ! $# -ne 1 ]; then
 		if [ "xrdp" = $1 ]; then
-			docker commit focal_docker focal_ws:latest
-			CONTAINER_ID=$(docker ps -a -f name=focal_docker --format "{{.ID}}")
-			docker stop $CONTAINER_ID
-			docker rm $CONTAINER_ID -f
 		    echo "Remote Desktop Mode"
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
 				focal_ws:latest \
-				/bin/bash -c docker-entrypoint.sh
+				--entrypoint docker-entrypoint.sh
 
 			docker commit focal_docker focal_ws:latest
 			CONTAINER_ID=$(docker ps -a -f name=focal_docker --format "{{.ID}}")
@@ -113,14 +109,14 @@ if [ ! "$CONTAINER_ID" ]; then
 				--name=${DOCKER_NAME} \
 				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
 				focal_ws:latest \
-				/bin/bash
+				--entrypoint /bin/bash
 		fi
 	else
 		docker run ${DOCKER_OPT} \
 			--name=${DOCKER_NAME} \
 			--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
 			focal_ws:latest \
-			/bin/bash
+			--entrypoint /bin/bash
 	fi
 else
 	if [ ! $# -ne 1 ]; then
@@ -135,7 +131,7 @@ else
 				--name=${DOCKER_NAME} \
 				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
 				focal_ws:latest \
-				/bin/bash -c docker-entrypoint.sh
+				--entrypoint docker-entrypoint.sh
 
 			docker commit focal_docker focal_ws:latest
 			CONTAINER_ID=$(docker ps -a -f name=focal_docker --format "{{.ID}}")

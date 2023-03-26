@@ -24,8 +24,8 @@ RUN useradd -u $UID -m $USERNAME && \
 
 
 RUN echo 'path-include=/usr/share/locale/ja/LC_MESSAGES/*.mo' > /etc/dpkg/dpkg.cfg.d/includes \
-    && apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    && apt update \
+    && DEBIAN_FRONTEND=noninteractive apt install -y \
         sudo \
         build-essential \
         curl \
@@ -49,8 +49,8 @@ RUN echo 'path-include=/usr/share/locale/ja/LC_MESSAGES/*.mo' > /etc/dpkg/dpkg.c
         gnupg
 
 RUN echo 'path-include=/usr/share/locale/ja/LC_MESSAGES/*.mo' > /etc/dpkg/dpkg.cfg.d/includes \
-    && apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    && apt update \
+    && DEBIAN_FRONTEND=noninteractive apt install -y \
         lxde \
         xrdp \
         ibus \
@@ -65,7 +65,7 @@ RUN echo 'path-include=/usr/share/locale/ja/LC_MESSAGES/*.mo' > /etc/dpkg/dpkg.c
 RUN sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-RUN apt-get update && apt-get install -y \
+RUN apt update && apt install -y \
         ros-melodic-desktop-full \
         python-rosdep \
         python-rosinstall \
@@ -73,11 +73,11 @@ RUN apt-get update && apt-get install -y \
         python-wstool \
         htop
 
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN apt update \
+    && DEBIAN_FRONTEND=noninteractive apt install -y \
       xrdp-pulseaudio-installer \
       net-tools \
-    && apt-get clean \
+    && apt clean \
     && rm -rf /var/cache/apt/archives/* \
     && rm -rf /var/lib/apt/lists/* \
 # Apply a patch
@@ -112,45 +112,45 @@ RUN if [ "${LOCALE}" = "JP" ]; then \
         cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
         && echo 'Asia/Tokyo' > /etc/timezone; \
 fi
-# RUN if [ "${LOCALE}" = "JP" ]; then \
-#         locale-gen ja_JP.UTF-8 \
-#         && echo 'LC_ALL=ja_JP.UTF-8' > /etc/default/locale \
-#         && echo 'LANG=ja_JP.UTF-8' >> /etc/default/locale\
-#         && LANG=ja_JP.UTF-8 \
-#         && LANGUAGE=ja_JP:ja \
-#         && LC_ALL=ja_JP.UTF-8; \
-# fi
+RUN if [ "${LOCALE}" = "JP" ]; then \
+        locale-gen ja_JP.UTF-8 \
+        && echo 'LC_ALL=ja_JP.UTF-8' > /etc/default/locale \
+        && echo 'LANG=ja_JP.UTF-8' >> /etc/default/locale\
+        && LANG=ja_JP.UTF-8 \
+        && LANGUAGE=ja_JP:ja \
+        && LC_ALL=ja_JP.UTF-8; \
+fi
 
-# RUN mkdir -p /etc/X11/xorg.conf.d/
+RUN mkdir -p /etc/X11/xorg.conf.d/
 
-# RUN if [ "${LOCALE}" = "JP" ]; then \
-# { \
-#       echo 'Section "InputClass"'; \
-#       echo '        Identifier "system-keyboard"'; \
-#       echo '        MatchIsKeyboard "on"'; \
-#       echo '        Option "XkbLayout" "jp,us"'; \
-#       echo '        Option "XkbModel" "jp106"'; \
-#       echo '        Option "XkbOptions" "grp:alt_shift_toggle"'; \
-#       echo 'EndSection'; \
-#     } > /etc/X11/xorg.conf.d/00-keyboard.conf; \
-# fi
+RUN if [ "${LOCALE}" = "JP" ]; then \
+{ \
+      echo 'Section "InputClass"'; \
+      echo '        Identifier "system-keyboard"'; \
+      echo '        MatchIsKeyboard "on"'; \
+      echo '        Option "XkbLayout" "jp,us"'; \
+      echo '        Option "XkbModel" "jp106"'; \
+      echo '        Option "XkbOptions" "grp:alt_shift_toggle"'; \
+      echo 'EndSection'; \
+    } > /etc/X11/xorg.conf.d/00-keyboard.conf; \
+fi
 
-# RUN if [ "${LOCALE}" = "JP" ]; then \
-# { \
-#       echo '# KEYBOARD CONFIGURATION FILE'; \
-#       echo '# Consult the keyboard(5) manual page.'; \
-#       echo 'XKBMODEL="pc109"'; \
-#       echo 'XKBLAYOUT="jp"'; \
-#       echo 'XKBVARIANT=""'; \
-#       echo 'XKBOPTIONS=""'; \
-#       echo 'BACKSPACE="guess"'; \
-#     } > /etc/default/keyboard; \
-# fi
+RUN if [ "${LOCALE}" = "JP" ]; then \
+{ \
+      echo '# KEYBOARD CONFIGURATION FILE'; \
+      echo '# Consult the keyboard(5) manual page.'; \
+      echo 'XKBMODEL="pc109"'; \
+      echo 'XKBLAYOUT="jp"'; \
+      echo 'XKBVARIANT=""'; \
+      echo 'XKBOPTIONS=""'; \
+      echo 'BACKSPACE="guess"'; \
+    } > /etc/default/keyboard; \
+fi
 
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN apt update \
+    && DEBIAN_FRONTEND=noninteractive apt install -y \
       ubuntu-wallpapers \
-    && apt-get clean \
+    && apt clean \
     && rm -rf /var/cache/apt/archives/* \
     && rm -rf /var/lib/apt/lists/* 
 
