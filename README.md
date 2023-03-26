@@ -2,6 +2,10 @@
  This docker file makes the container of ROS Melodic on Ubuntu 18.04 LTS for M1 Mac (ARM64) based on https://github.com/yama07/docker-ubuntu-lxde/tree/master/xrdp
 ## Limitation
  Some errors happen
+
+## Recommend
+ Use jammy_kde (include ROS2 Humble)
+
 ## How to use
 1. Install docker developer preview for M1 Mac
 2. Install XQuartz
