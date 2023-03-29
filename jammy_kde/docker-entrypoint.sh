@@ -37,4 +37,4 @@ sudo /usr/bin/supervisord -c /etc/supervisor/xrdp.conf
 
 
 echo "#############################"
-exec "$@"
+# exec "$@"

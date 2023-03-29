@@ -340,6 +340,29 @@ RUN { \
 
 USER ${USER}
 RUN LANG=C xdg-user-dirs-update --force
+RUN touch /home/${USERNAME}/Desktop/home.desktop
+RUN touch /home/${USERNAME}/Desktop/trash.desktop
+
+# Make Desktop Icons
+RUN { \
+    echo "[Desktop Entry]"; \
+    echo "Encoding=UTF-8"; \
+    echo "Name=Home"; \
+    echo "GenericName=Personal Files"; \
+    echo "URL[$e]=$HOME"; \
+    echo "Icon=user-home"; \
+    echo "Type=Link"; \
+    } > /home/${USERNAME}/Desktop/home.desktop
+
+RUN { \
+    echo "[Desktop Entry]"; \
+    echo "Name=Trash"; \
+    echo "Comment=Contains removed files"; \
+    echo "Icon=user-trash-full"; \
+    echo "EmptyIcon=user-trash"; \
+    echo "URL=trash:/"; \
+    echo "Type=Link"; \
+    } > /home/${USERNAME}/Desktop/trash.desktop
 
 USER root
 RUN chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/*

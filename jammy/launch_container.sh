@@ -9,7 +9,7 @@ if [ ! "$(docker image ls -q ${NAME_IMAGE})" ]; then
 		if [ "build" = $1 ]; then
 			echo "Image ${NAME_IMAGE} does not exist."
 			echo 'Now building image without proxy...'
-			docker build --file=./noproxy.dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg SETLOCALE='US'
+			docker build --file=./noproxy.dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg SETLOCALE='JP'
 			exit 0
 		else
 			echo "Docker image is not found. Please setup first!"
