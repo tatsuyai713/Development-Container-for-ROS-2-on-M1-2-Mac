@@ -110,8 +110,8 @@ if [ ! "$CONTAINER_ID" ]; then
 		    echo "Remote Desktop Mode"
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
-				jammy_kde_ws:latest \
-				--entrypoint docker-entrypoint.sh
+				--entrypoint docker-entrypoint.sh \
+				jammy_kde_ws:latest
 
 			docker commit jammy_kde_docker jammy_kde_ws:latest
 			CONTAINER_ID=$(docker ps -a -f name=jammy_kde_docker --format "{{.ID}}")
@@ -121,15 +121,15 @@ if [ ! "$CONTAINER_ID" ]; then
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
 				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
-				jammy_kde_ws:latest \
-				--entrypoint /bin/bash
+				--entrypoint /bin/bash \
+				jammy_kde_ws:latest
 		fi
 	else
 		docker run ${DOCKER_OPT} \
 			--name=${DOCKER_NAME} \
 			--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
-			jammy_kde_ws:latest \
-			--entrypoint /bin/bash
+			--entrypoint /bin/bash \
+			jammy_kde_ws:latest
 	fi
 else
 	if [ ! $# -ne 1 ]; then
@@ -143,8 +143,8 @@ else
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
 				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
-				jammy_kde_ws:latest \
-				--entrypoint docker-entrypoint.sh
+				--entrypoint docker-entrypoint.sh \
+				jammy_kde_ws:latest
 
 			docker commit jammy_kde_docker jammy_kde_ws:latest
 			CONTAINER_ID=$(docker ps -a -f name=jammy_kde_docker --format "{{.ID}}")

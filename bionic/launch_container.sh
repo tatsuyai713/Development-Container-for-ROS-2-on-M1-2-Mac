@@ -98,8 +98,8 @@ if [ ! "$CONTAINER_ID" ]; then
 		    echo "Remote Desktop Mode"
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
-				bionic_ws:latest \
-				--entrypoint docker-entrypoint.sh
+				--entrypoint docker-entrypoint.sh \
+				bionic_ws:latest
 
 			docker commit bionic_docker bionic_ws:latest
 			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
@@ -109,15 +109,15 @@ if [ ! "$CONTAINER_ID" ]; then
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
 				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
-				bionic_ws:latest \
-				--entrypoint /bin/bash
+				--entrypoint /bin/bash \
+				bionic_ws:latest
 		fi
 	else
 		docker run ${DOCKER_OPT} \
 			--name=${DOCKER_NAME} \
 			--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
-			bionic_ws:latest \
-			--entrypoint /bin/bash
+			--entrypoint /bin/bash \
+			bionic_ws:latest
 	fi
 else
 	if [ ! $# -ne 1 ]; then
@@ -131,8 +131,8 @@ else
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
 				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
-				bionic_ws:latest \
-				--entrypoint docker-entrypoint.sh
+				--entrypoint docker-entrypoint.sh \
+				bionic_ws:latest
 
 			docker commit bionic_docker bionic_ws:latest
 			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
