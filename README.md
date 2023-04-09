@@ -12,4 +12,14 @@
 2. Build container : excute "./launch_container.sh build" (for Japanese : "./launch_container.sh build JP")
 3. To use bash only : "./launch_container.sh"
 4. Commit docker container : "./launch_container.sh commit"
-5. Use ROS with GUI : "./launch_container.sh xrdp" and use Parallels Client(access to 127.0.0.1).(Don't use Microsoft Remote Desktop)
+5. Use ROS with GUI : "./launch_container.sh xrdp" and use RDP Client(access to 127.0.0.1).
+
+## RDP Client
+
+- Microsoft Remote Desktop
+
+Support sound but cannot input "_" by JP keyboard
+
+- Parallels Client
+
+Support "_" by JP keyboard but sound is not suported
