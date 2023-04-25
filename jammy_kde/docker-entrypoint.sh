@@ -24,9 +24,6 @@ echo ${USER}:${PASSWD} | sudo chpasswd
 # SSH start
 sudo service ssh start
 
-# Pulseaudio
-pulseaudio --start
-
 # Choose startplasma-x11 or startkde for KDE startup
 if [ -x "$(command -v startplasma-x11)" ]; then export KDE_START="startplasma-x11"; else export KDE_START="startkde"; fi
 
@@ -37,7 +34,6 @@ if [ -x "$(command -v startplasma-x11)" ]; then export KDE_START="startplasma-x1
 
 dbus-launch fcitx &
 sudo /usr/bin/supervisord -c /etc/supervisor/xrdp.conf
-
 
 echo "#############################"
 # exec "$@"

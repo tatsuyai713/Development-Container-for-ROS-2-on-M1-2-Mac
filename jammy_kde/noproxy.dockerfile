@@ -344,6 +344,17 @@ RUN { \
       echo "[program:xrdp]"; \
       echo "command=/usr/sbin/xrdp --nodaemon"; \
       echo "user=xrdp"; \
+      echo "[program:pulseaudio]"; \
+      echo "priority=15"; \
+      echo "directory=/home/$USERNAME"; \
+      echo "command=/usr/bin/pulseaudio"; \
+      echo "user=$USERNAME"; \
+      echo "autostart=true"; \
+      echo "autorestart=true"; \
+      echo "stopsignal=TERM"; \
+      echo "environment=DISPLAY=:1,HOME=/home/$USERNAME"; \
+      echo "stdout_logfile=/var/log/pulseaudio.log"; \
+      echo "stderr_logfile=/var/log/pulseaudio.err"; \
     } > /etc/supervisor/xrdp.conf
 
 RUN { \
