@@ -322,6 +322,10 @@ fi
 
 USER root
 
+RUN if [ "${LOCALE}" = "JP" ]; then \
+    rm -f /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Tokyo /etc/localtime; \
+fi
+
 # Expose RDP port
 EXPOSE 3389
 
