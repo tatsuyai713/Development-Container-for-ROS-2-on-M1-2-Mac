@@ -320,6 +320,8 @@ RUN if [ "${LOCALE}" = "JP" ]; then \
     echo "export LANG=ja_JP.UTF-8" >> ~/.bashrc; \
 fi
 
+RUN echo "export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> ~/.bashrc
+
 USER root
 
 RUN if [ "${LOCALE}" = "JP" ]; then \
