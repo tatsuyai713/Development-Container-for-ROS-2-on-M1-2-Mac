@@ -48,7 +48,7 @@ RUN echo 'path-include=/usr/share/locale/ja/LC_MESSAGES/*.mo' > /etc/dpkg/dpkg.c
         lsb-release \
         gnupg
 
-RUN apt update && apt install --no-install-recommends -y \
+RUN apt update && DEBIAN_FRONTEND=noninteractive apt install --no-install-recommends -y \
         software-properties-common \
         alsa-base \
         alsa-utils \
@@ -139,7 +139,7 @@ RUN apt update && apt install --no-install-recommends -y \
         vulkan-tools && \
     rm -rf /var/lib/apt/lists/*
 
-RUN apt update && apt install --no-install-recommends -y \
+RUN apt update && DEBIAN_FRONTEND=noninteractive apt install --no-install-recommends -y \
         kde-plasma-desktop \
         kwin-addons \
         kwin-x11 \
