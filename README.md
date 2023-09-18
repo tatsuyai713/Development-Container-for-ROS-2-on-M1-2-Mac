@@ -1,4 +1,4 @@
-# ROS on M1 Mac Docker with xrdp(ARM64)
+# ROS 2 on ARM64 Mac via Docker
  This docker file makes the container of ROS 2 Humble for M1 Mac (ARM64)
 
 ## How to use
