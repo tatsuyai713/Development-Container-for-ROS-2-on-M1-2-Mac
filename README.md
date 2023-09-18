@@ -3,7 +3,7 @@
 
 ## How to use
 1. Install docker for M1 Mac
-2. Build container : execute "./build_container.sh <JP or US>" (for Japanese : "./build_container.sh JP")
+2. Build container : execute "./build_container.sh \<JP or US\>" (for Japanese : "./build_container.sh JP")
 3. Start Container : execute "./start_container.sh"
 4. Commit docker container : "./stop_container.sh"
 5. Attach docker container and use bash : "./attach_container.sh"
