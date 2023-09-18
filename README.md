@@ -9,7 +9,7 @@
 5. Attach docker container and use bash : "./attach_container.sh"
 6. Use KDE Plasma Desktop via xrdp : use RDP Client and access to 127.0.0.1 or localhost.
 
-## RDP Client Recommendation
+## Recommended RDP Client
 
 - Microsoft Remote Desktop
 
