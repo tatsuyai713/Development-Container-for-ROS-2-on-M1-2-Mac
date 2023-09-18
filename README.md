@@ -1,17 +1,15 @@
 # ROS on M1 Mac Docker with xrdp(ARM64)
- This docker file makes the container of ROS Melodic on Ubuntu 18.04 LTS for M1 Mac (ARM64) based on https://github.com/yama07/docker-ubuntu-lxde/tree/master/xrdp
-
-## Recommend
- Use jammy_kde (include ROS2 Humble)
+ This docker file makes the container of ROS 2 Humble for M1 Mac (ARM64)
 
 ## How to use
-1. Install docker developer preview for M1 Mac
-2. Build container : excute "./launch_container.sh build" (for Japanese : "./launch_container.sh build JP")
-3. To use bash only : "./launch_container.sh"
-4. Commit docker container : "./launch_container.sh commit"
-5. Use ROS with GUI : "./launch_container.sh xrdp" and use RDP Client(access to 127.0.0.1).
+1. Install docker for M1 Mac
+2. Build container : execute "./build_container.sh <JP or US>" (for Japanese : "./build_container.sh JP")
+3. Start Container : execute "./start_container.sh"
+4. Commit docker container : "./stop_container.sh"
+5. Attach docker container and use bash : "./attach_container.sh"
+6. Use KDE Plasma Desktop via xrdp : use RDP Client and access to 127.0.0.1 or localhost.
 
-## RDP Client
+## RDP Client Recommendation
 
 - Microsoft Remote Desktop
 

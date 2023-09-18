@@ -2,7 +2,7 @@
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 
-NAME_IMAGE='bionic_ws'
+NAME_IMAGE='jammy_kde_ws'
 
 if [ ! "$(docker image ls -q ${NAME_IMAGE})" ]; then
 	if [ ! $# -ne 1 ]; then
@@ -36,22 +36,48 @@ if [ ! "$(docker image ls -q ${NAME_IMAGE})" ]; then
 		echo "Docker image is not found. Please setup first!"
 		exit 0
   	fi
+else
+	if [ ! $# -ne 1 ]; then
+		if [ "build" = $1 ]; then
+			echo "Docker image is found. Please select mode!"
+			exit 0
+		fi
+    elif [ ! $# -ne 2 ]; then
+		if [ "build" = $1 ]; then
+			echo "Docker image is found. Please select mode!"
+			exit 0
+		fi
+  	fi
 fi
 
+# Commit
 if [ ! $# -ne 1 ]; then
 	if [ "commit" = $1 ]; then
-		docker commit bionic_docker bionic_ws:latest
-		CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+		docker commit jammy_kde_docker jammy_kde_ws:latest
+		CONTAINER_ID=$(docker ps -a -f name=jammy_kde_docker --format "{{.ID}}")
 		docker rm $CONTAINER_ID -f
 		exit 0
 	fi
 fi
 
+# Stop
 if [ ! $# -ne 1 ]; then
 	if [ "stop" = $1 ]; then
-		CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+		CONTAINER_ID=$(docker ps -a -f name=jammy_kde_docker --format "{{.ID}}")
 		docker stop $CONTAINER_ID
 		docker rm $CONTAINER_ID -f
+		exit 0
+	fi
+fi
+
+# Delete
+if [ ! $# -ne 1 ]; then
+	if [ "delete" = $1 ]; then
+		echo 'Now deleting docker container...'
+		CONTAINER_ID=$(docker ps -a -f name=jammy_kde_docker --format "{{.ID}}")
+		docker stop $CONTAINER_ID
+		docker rm $CONTAINER_ID -f
+		docker image rm jammy_kde_ws
 		exit 0
 	fi
 fi
@@ -65,7 +91,7 @@ fi
 chmod a+r $XAUTH
 
 DOCKER_OPT=""
-DOCKER_NAME="bionic_docker"
+DOCKER_NAME="jammy_kde_docker"
 DOCKER_WORK_DIR="/home/${USER}"
 MAC_WORK_DIR="/Users/${USER}"
 DISPLAY=$(hostname):0
@@ -78,7 +104,6 @@ DOCKER_OPT="${DOCKER_OPT} \
         --env=XAUTHORITY=${XAUTH} \
         --volume=${XAUTH}:${XAUTH} \
         --env=DISPLAY=${DISPLAY} \
-		-it \
 		--shm-size=4gb \
 		--env=TERM=xterm-256color \
         -w ${DOCKER_WORK_DIR} \
@@ -90,8 +115,8 @@ DOCKER_OPT="${DOCKER_OPT} \
 		
 		
 ## Allow X11 Connection
-xhost +local:Docker-`hostname`
-CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
+xhost +local:`hostname`
+CONTAINER_ID=$(docker ps -a -f name=jammy_kde_docker --format "{{.ID}}")
 if [ ! "$CONTAINER_ID" ]; then
 	if [ ! $# -ne 1 ]; then
 		if [ "xrdp" = $1 ]; then
@@ -99,45 +124,32 @@ if [ ! "$CONTAINER_ID" ]; then
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
 				--entrypoint docker-entrypoint.sh \
-				bionic_ws:latest
-
-			docker commit bionic_docker bionic_ws:latest
-			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
-			docker stop $CONTAINER_ID
-			docker rm $CONTAINER_ID -f
+				jammy_kde_ws:latest
 		else
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
 				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
+				-it \
 				--entrypoint /bin/bash \
-				bionic_ws:latest
+				jammy_kde_ws:latest
 		fi
 	else
 		docker run ${DOCKER_OPT} \
 			--name=${DOCKER_NAME} \
 			--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
+			-it \
 			--entrypoint /bin/bash \
-			bionic_ws:latest
+			jammy_kde_ws:latest
 	fi
 else
 	if [ ! $# -ne 1 ]; then
 		if [ "xrdp" = $1 ]; then
-			docker commit bionic_docker bionic_ws:latest
-			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
-			docker stop $CONTAINER_ID
-			docker rm $CONTAINER_ID -f
-
 		    echo "Remote Desktop Mode"
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
 				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
 				--entrypoint docker-entrypoint.sh \
-				bionic_ws:latest
-
-			docker commit bionic_docker bionic_ws:latest
-			CONTAINER_ID=$(docker ps -a -f name=bionic_docker --format "{{.ID}}")
-			docker stop $CONTAINER_ID
-			docker rm $CONTAINER_ID -f
+				jammy_kde_ws:latest
 		else
 			docker start $CONTAINER_ID
 			docker exec -it $CONTAINER_ID /bin/bash
@@ -148,5 +160,5 @@ else
 	fi
 fi
 
-xhost -local:Docker-`hostname`
+xhost -local:`hostname`
 
