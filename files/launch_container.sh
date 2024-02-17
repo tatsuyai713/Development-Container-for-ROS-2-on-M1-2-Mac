@@ -1,15 +1,15 @@
 #!/bin/sh
-SCRIPT_DIR=$(cd $(dirname $0); pwd)
+SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
+cd $SCRIPT_DIR
 
-
-NAME_IMAGE='jammy_kde_ws'
+NAME_IMAGE="development-container-for-ros-2-on-m1-2-mac_for_${USER}"
 
 if [ ! "$(docker image ls -q ${NAME_IMAGE})" ]; then
 	if [ ! $# -ne 1 ]; then
 		if [ "build" = $1 ]; then
 			echo "Image ${NAME_IMAGE} does not exist."
 			echo 'Now building image without proxy...'
-			docker build --file=./noproxy.dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg SETLOCALE='JP'
+			docker build --file=./Dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg SETLOCALE='JP'
 			exit 0
 		else
 			echo "Docker image is not found. Please setup first!"
@@ -20,12 +20,12 @@ if [ ! "$(docker image ls -q ${NAME_IMAGE})" ]; then
 			if [ "US" = $2 ]; then
 				echo "Image ${NAME_IMAGE} does not exist."
 				echo 'Now building image without proxy...'
-				docker build --file=./noproxy.dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg LOCALE='US'
+				docker build --file=./Dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg LOCALE='US'
 				exit 0
 			else
 				echo "Image ${NAME_IMAGE} does not exist."
 				echo 'Now building image without proxy...'
-				docker build --file=./noproxy.dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg LOCALE='JP'
+				docker build --file=./Dockerfile -t $NAME_IMAGE . --build-arg UID=$(id -u) --build-arg GID=$(id -u) --build-arg UNAME=$USER --build-arg LOCALE='JP'
 				exit 0
 			fi
 		else
@@ -53,8 +53,8 @@ fi
 # Commit
 if [ ! $# -ne 1 ]; then
 	if [ "commit" = $1 ]; then
-		docker commit jammy_kde_docker jammy_kde_ws:latest
-		CONTAINER_ID=$(docker ps -a -f name=jammy_kde_docker --format "{{.ID}}")
+		docker commit development-container-for-ros-2-on-m1-2-mac_for_${USER}_container development-container-for-ros-2-on-m1-2-mac_for_${USER}:latest
+		CONTAINER_ID=$(docker ps -a -f name=development-container-for-ros-2-on-m1-2-mac_for_${USER}_container --format "{{.ID}}")
 		docker rm $CONTAINER_ID -f
 		exit 0
 	fi
@@ -63,7 +63,7 @@ fi
 # Stop
 if [ ! $# -ne 1 ]; then
 	if [ "stop" = $1 ]; then
-		CONTAINER_ID=$(docker ps -a -f name=jammy_kde_docker --format "{{.ID}}")
+		CONTAINER_ID=$(docker ps -a -f name=development-container-for-ros-2-on-m1-2-mac_for_${USER}_container --format "{{.ID}}")
 		docker stop $CONTAINER_ID
 		docker rm $CONTAINER_ID -f
 		exit 0
@@ -74,10 +74,10 @@ fi
 if [ ! $# -ne 1 ]; then
 	if [ "delete" = $1 ]; then
 		echo 'Now deleting docker container...'
-		CONTAINER_ID=$(docker ps -a -f name=jammy_kde_docker --format "{{.ID}}")
+		CONTAINER_ID=$(docker ps -a -f name=development-container-for-ros-2-on-m1-2-mac_for_${USER}_container --format "{{.ID}}")
 		docker stop $CONTAINER_ID
 		docker rm $CONTAINER_ID -f
-		docker image rm jammy_kde_ws
+		docker image rm development-container-for-ros-2-on-m1-2-mac_for_${USER}
 		exit 0
 	fi
 fi
@@ -91,7 +91,7 @@ fi
 chmod a+r $XAUTH
 
 DOCKER_OPT=""
-DOCKER_NAME="jammy_kde_docker"
+DOCKER_NAME="development-container-for-ros-2-on-m1-2-mac_for_${USER}_container"
 DOCKER_WORK_DIR="/home/${USER}"
 MAC_WORK_DIR="/Users/${USER}"
 DISPLAY=$(hostname):0
@@ -116,7 +116,7 @@ DOCKER_OPT="${DOCKER_OPT} \
 		
 ## Allow X11 Connection
 xhost +local:`hostname`
-CONTAINER_ID=$(docker ps -a -f name=jammy_kde_docker --format "{{.ID}}")
+CONTAINER_ID=$(docker ps -a -f name=development-container-for-ros-2-on-m1-2-mac_for_${USER}_container --format "{{.ID}}")
 if [ ! "$CONTAINER_ID" ]; then
 	if [ ! $# -ne 1 ]; then
 		if [ "xrdp" = $1 ]; then
@@ -124,14 +124,14 @@ if [ ! "$CONTAINER_ID" ]; then
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
 				--entrypoint docker-entrypoint.sh \
-				jammy_kde_ws:latest
+				development-container-for-ros-2-on-m1-2-mac_for_${USER}:latest
 		else
 			docker run ${DOCKER_OPT} \
 				--name=${DOCKER_NAME} \
 				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
 				-it \
 				--entrypoint /bin/bash \
-				jammy_kde_ws:latest
+				development-container-for-ros-2-on-m1-2-mac_for_${USER}:latest
 		fi
 	else
 		docker run ${DOCKER_OPT} \
@@ -139,7 +139,7 @@ if [ ! "$CONTAINER_ID" ]; then
 			--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
 			-it \
 			--entrypoint /bin/bash \
-			jammy_kde_ws:latest
+			development-container-for-ros-2-on-m1-2-mac_for_${USER}:latest
 	fi
 else
 	if [ ! $# -ne 1 ]; then
@@ -149,7 +149,7 @@ else
 				--name=${DOCKER_NAME} \
 				--volume=$MAC_WORK_DIR/.Xauthority:$DOCKER_WORK_DIR/.Xauthority:rw \
 				--entrypoint docker-entrypoint.sh \
-				jammy_kde_ws:latest
+				development-container-for-ros-2-on-m1-2-mac_for_${USER}:latest
 		else
 			docker start $CONTAINER_ID
 			docker exec -it $CONTAINER_ID /bin/bash

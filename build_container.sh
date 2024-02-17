@@ -1,9 +1,10 @@
 #!/bin/bash
-SHELL_DIR=$(cd $(dirname $0) && pwd)
+SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
+cd $SCRIPT_DIR
+pwd
+cd ./files
 
-cd ./scripts
-
-NAME_IMAGE='jammy_kde_ws'
+NAME_IMAGE='development-container-for-ros-2-on-m1-2-mac_for_${USER}'
 
 if [ $# -ne 1 ]; then
 	echo "Please select keyboard type. (JP or US)"

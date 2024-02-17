@@ -1,12 +1,12 @@
 #!/bin/bash
 
-SHELL_DIR=$(cd $(dirname $0) && pwd)
+SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 
-cd $SHELL_DIR/scripts
+cd $SCRIPT_DIR/files
 
-if [ "$(docker ps -al | grep jammy_kde_docker)" ]; then
+if [ "$(docker ps -al | grep development-container-for-ros-2-on-m1-2-mac_for_${USER}_container)" ]; then
 	echo "docker container restarting..."
-	CONTAINER_ID=$(docker ps -a -f name=jammy_kde_docker --format "{{.ID}}")
+	CONTAINER_ID=$(docker ps -a -f name=development-container-for-ros-2-on-m1-2-mac_for_${USER}_container --format "{{.ID}}")
 	
 	sudo rm -rf /tmp/.docker.xauth
 	XAUTH=/tmp/.docker.xauth
@@ -18,7 +18,14 @@ if [ "$(docker ps -al | grep jammy_kde_docker)" ]; then
 	chmod a+r $XAUTH
 
 	docker start $CONTAINER_ID
+	echo "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/"
+	echo "_/ Plese access the container by RDP Client!! _/"
+	echo "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/"
 	exit
 fi
 
-nohup ./launch_container.sh xrdp > /tmp/nohup.out &
+nohup ./launch_container.sh xrdp > /tmp/nohup.out 2>&1 &
+
+echo "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/"
+echo "_/ Plese access localhost by RDP Client!! _/"
+echo "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/"

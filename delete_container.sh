@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SHELL_DIR=$(cd $(dirname $0) && pwd)
+SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 
-cd $SHELL_DIR/scripts
+cd $SCRIPT_DIR/files
 ./launch_container.sh delete
