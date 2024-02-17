@@ -1,4 +1,4 @@
-# Development Container for ROS 2 on M1/M2 Macs
+# Development Container for ROS 2 on M1/M2 Mac
 
 This Dockerfile is designed to create a Docker container specifically for ROS 2 Humble, optimized for M1/M2 Macs (ARM64 architecture).
 
