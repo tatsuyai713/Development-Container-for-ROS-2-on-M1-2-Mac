@@ -1,4 +1,4 @@
-# ROS 2 on ARM64 Mac via Docker
+# Development Container for ROS 2 on M1/2 Mac
  This docker file makes the container of ROS 2 Humble for M1 Mac (ARM64)
 
 ## How to use
