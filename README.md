@@ -20,21 +20,21 @@ This Dockerfile is designed to create a Docker container specifically for ROS 2 
 
    For US keyboard type, replace `JP` with `US`.
    
-4. **Start the Container**: 
+3. **Start the Container**: 
    Initiate the container with
 
 ```
    ./start_container.sh
 ```
    
-6. **Commit Changes**: 
+4. **Commit Changes**: 
    Save the current state of the Docker container using
 
 ```
    ./stop_container.sh
 ```
    
-8. **Access the Container**: 
+5. **Access the Container**: 
    For terminal access, run
 
 ```
@@ -42,7 +42,8 @@ This Dockerfile is designed to create a Docker container specifically for ROS 2 
 ```
 
    to use bash inside the Docker container.
-10. **Desktop Environment**: 
+   
+6. **Desktop Environment**: 
    To use the KDE Plasma Desktop via xrdp, connect using an RDP client to `127.0.0.1` or `localhost`.
 
 ### Recommended RDP Clients
