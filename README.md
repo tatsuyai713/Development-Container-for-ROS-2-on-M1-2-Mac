@@ -18,7 +18,8 @@ This Dockerfile is designed to create a Docker container specifically for ROS 2 
    ./build_container.sh JP
 ```
 
-   For other keyboard types, replace `JP` with the appropriate keyboard code (e.g., `US` for United States).
+   For US keyboard type, replace `JP` with `US`.
+   
 4. **Start the Container**: 
    Initiate the container with
 
