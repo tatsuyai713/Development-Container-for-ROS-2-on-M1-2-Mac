@@ -94,6 +94,7 @@ DOCKER_OPT="${DOCKER_OPT} \
 		--env=TERM=xterm-256color \
         -w ${DOCKER_WORK_DIR} \
         -u ${USER} \
+        --ipc=host \
         --hostname Docker-`hostname` \
         --add-host Docker-`hostname`:127.0.1.1 \
 		-p 3389:3389 \
