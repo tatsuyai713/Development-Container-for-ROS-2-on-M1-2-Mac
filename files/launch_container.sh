@@ -82,28 +82,14 @@ if [ ! $# -ne 1 ]; then
 	fi
 fi
 
-XAUTH=/tmp/.docker.xauth
-touch $XAUTH
-xauth_list=$(xauth nlist :0 | sed -e 's/^..../ffff/')
-if [ ! -z "$xauth_list" ];  then
-  echo $xauth_list | xauth -f $XAUTH nmerge -
-fi
-chmod a+r $XAUTH
-
 DOCKER_OPT=""
 DOCKER_NAME="development-container-for-ros-2-on-m1-2-mac_for_${USER}_container"
 DOCKER_WORK_DIR="/home/${USER}"
 MAC_WORK_DIR="/Users/${USER}"
-DISPLAY=$(hostname):0
 
 ## For XWindow
 DOCKER_OPT="${DOCKER_OPT} \
-        --env=QT_X11_NO_MITSHM=1 \
-        --volume=/tmp/.X11-unix:/tmp/.X11-unix:rw \
         --volume=/Users/${USER}:/home/${USER}/host_home:rw \
-        --env=XAUTHORITY=${XAUTH} \
-        --volume=${XAUTH}:${XAUTH} \
-        --env=DISPLAY=${DISPLAY} \
 		--shm-size=4gb \
 		--env=TERM=xterm-256color \
         -w ${DOCKER_WORK_DIR} \
@@ -115,7 +101,6 @@ DOCKER_OPT="${DOCKER_OPT} \
 		
 		
 ## Allow X11 Connection
-xhost +local:`hostname`
 CONTAINER_ID=$(docker ps -a -f name=development-container-for-ros-2-on-m1-2-mac_for_${USER}_container --format "{{.ID}}")
 if [ ! "$CONTAINER_ID" ]; then
 	if [ ! $# -ne 1 ]; then
@@ -159,6 +144,4 @@ else
 		docker exec -it $CONTAINER_ID /bin/bash
 	fi
 fi
-
-xhost -local:`hostname`
 

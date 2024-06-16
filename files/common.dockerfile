@@ -177,6 +177,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install --no-install-recomm
         xdg-desktop-portal-kde \
         kubuntu-restricted-extras \
         kubuntu-wallpapers \
+        kubuntu-desktop \
         pavucontrol-qt \
         transmission-qt && \
     apt install --install-recommends -y \

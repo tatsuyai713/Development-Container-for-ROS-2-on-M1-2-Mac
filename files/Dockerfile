@@ -1,4 +1,4 @@
-FROM ghcr.io/tatsuyai713/development-container-for-ros-2-on-m1-2-mac:v0.01
+FROM ghcr.io/tatsuyai713/development-container-for-ros-2-on-m1-2-mac:v0.02
 
 ARG UID=9001
 ARG GID=9001
