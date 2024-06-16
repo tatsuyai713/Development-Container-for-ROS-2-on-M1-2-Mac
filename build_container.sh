@@ -28,7 +28,6 @@ else
 	exit
 fi
 
-
 echo "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/"
 echo "_/Building container image is finished!!_/"
 echo "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/"
