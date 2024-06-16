@@ -19,7 +19,7 @@ if [ "$(docker ps -al | grep development-container-for-ros-2-on-m1-2-mac_for_${U
 
 	docker start $CONTAINER_ID
 	echo "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/"
-	echo "_/ Plese access the container by RDP Client!! _/"
+	echo "_/ Plese access your container via RDP Client _/"
 	echo "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/"
 	exit
 fi
