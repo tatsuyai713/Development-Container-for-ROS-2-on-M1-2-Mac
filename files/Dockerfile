@@ -83,7 +83,7 @@ RUN { \
       echo "autostart=true"; \
       echo "autorestart=true"; \
       echo "stopsignal=TERM"; \
-      echo "environment=DISPLAY=:1,HOME=/home/$USERNAME"; \
+      echo "environment=HOME=/home/$USERNAME"; \
       echo "stdout_logfile=/var/log/pulseaudio.log"; \
       echo "stderr_logfile=/var/log/pulseaudio.err"; \
     } > /etc/supervisor/xrdp.conf

@@ -243,8 +243,6 @@ RUN apt update && apt install -y --no-install-recommends \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN echo "export XDG_RUNTIME_DIR=/run/user/$(id -u)" >> /etc/profile
-
 # Pulseaudio
 RUN apt update && apt install -y libtool libpulse-dev git autoconf pkg-config libssl-dev libpam0g-dev libx11-dev libxfixes-dev libxrandr-dev nasm xsltproc flex bison libxml2-dev dpkg-dev libcap-dev meson ninja-build libsndfile1-dev libtdb-dev check doxygen libxml-parser-perl libxtst-dev gettext
 
