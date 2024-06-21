@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 RUN echo 'path-include=/usr/share/locale/ja/LC_MESSAGES/*.mo' > /etc/dpkg/dpkg.cfg.d/includes \
     && apt update \
@@ -53,7 +53,6 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install --no-install-recomm
     python3 \
     python3-cups \
     python3-numpy \
-    mlocate \
     nano \
     vim \
     htop \
@@ -152,7 +151,6 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install --no-install-recomm
     kleopatra \
     kmail \
     kmenuedit \
-    kmix \
     knotes \
     kontact \
     kopete \
@@ -220,11 +218,11 @@ RUN { \
 RUN apt -y update \
     && apt install -y firefox
 
-# install ROS2 Humble
+# install ROS2 Jazzy
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
 RUN apt update && apt install -y --no-install-recommends \
-    ros-humble-desktop \
+    ros-jazzy-desktop-full \
     ros-dev-tools \
     && \
     apt clean && \
@@ -239,7 +237,7 @@ RUN apt update && apt install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Pulseaudio
-RUN apt update && apt install -y libtool libpulse-dev git autoconf pkg-config libssl-dev libpam0g-dev libx11-dev libxfixes-dev libxrandr-dev nasm xsltproc flex bison libxml2-dev dpkg-dev libcap-dev meson ninja-build libsndfile1-dev libtdb-dev check doxygen libxml-parser-perl
+RUN apt update && apt install -y libtool libpulse-dev git autoconf pkg-config libssl-dev libpam0g-dev libx11-dev libxfixes-dev libxrandr-dev nasm xsltproc flex bison libxml2-dev dpkg-dev libcap-dev meson ninja-build libsndfile1-dev libtdb-dev check doxygen libxml-parser-perl libxtst-dev gettext
 
 RUN git clone --recursive https://github.com/pulseaudio/pulseaudio.git && \
     cd pulseaudio && \

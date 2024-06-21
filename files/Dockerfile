@@ -1,4 +1,4 @@
-FROM ghcr.io/tatsuyai713/development-container-for-ros-2-on-m1-2-mac:v0.02
+FROM ghcr.io/tatsuyai713/development-container-for-ros-2-on-m1-2-mac:v24.04
 
 ARG UID=9001
 ARG GID=9001
@@ -94,14 +94,11 @@ USER $USERNAME
 # initialize rosdep
 RUN rosdep update
 
-RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
-    echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc
+RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
 
 RUN if [ "${LOCALE}" = "JP" ]; then \
     echo "export LANG=ja_JP.UTF-8" >> ~/.bashrc; \
 fi
-
-RUN echo "export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> ~/.bashrc
 
 
 RUN LANG=C xdg-user-dirs-update --force
