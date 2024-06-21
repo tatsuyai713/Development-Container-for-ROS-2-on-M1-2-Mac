@@ -241,7 +241,7 @@ RUN apt update && apt install -y libtool libpulse-dev git autoconf pkg-config li
 
 RUN git clone --recursive https://github.com/pulseaudio/pulseaudio.git && \
     cd pulseaudio && \
-    git checkout tags/v15.99.1 -b v15.99.1 && \
+    git checkout tags/v16.1 -b v16.1 && \
     meson build && \
     ninja -C build && \
     cd ../ && \
