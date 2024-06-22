@@ -101,9 +101,6 @@ RUN if [ "${LOCALE}" = "JP" ]; then \
     echo "export LANG=ja_JP.UTF-8" >> ~/.bashrc; \
 fi
 
-RUN echo "export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> ~/.bashrc
-
-
 RUN LANG=C xdg-user-dirs-update --force
 RUN touch /home/${USERNAME}/Desktop/home.desktop
 RUN touch /home/${USERNAME}/Desktop/trash.desktop
